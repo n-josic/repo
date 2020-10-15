@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Poruka from './components/Poruka'
+import Footer from './components/Footer'
 import axios from 'axios'
 
-const Footer = () => {
-    const footerStil = {
-        color: 'red',
-        fontSize: 15
-    }
-    return (
-        <div style={footerStil}>FOOTER</div>
-    )
-}
+
 
 const App = (props) => {
     //const { poruke } = props
