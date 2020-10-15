@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Poruka from './components/Poruka'
 import Footer from './components/Footer'
-import axios from 'axios'
+import porukeServer from './services/poruke'
 
 
 
@@ -13,11 +13,11 @@ const App = (props) => {
 
     useEffect( () => {
         console.log("Effect hook");
-        axios
-        .get("http://localhost:3001/poruke")
-        .then( (response) => {
+        porukeServer
+        .dohvatiSve()
+        .then( pocPoruke => {
             console.log("Podaci učitani");
-            postaviPoruke(response.data)
+            postaviPoruke(pocPoruke)
         })
     }, [])
 
@@ -33,8 +33,8 @@ const App = (props) => {
             datum: new Date().toISOString(),
             vazno: Math.random() > 0.5
         }
-        axios
-        .post("http://localhost:3001/poruke", noviObjekt)
+        porukeServer
+        .stvori(noviObjekt)
         .then( (response) => {
             console.log(response)
             postaviPoruke(poruke.concat(response.data))
@@ -48,14 +48,13 @@ const App = (props) => {
     }
 
     const promjenaVaznostiPoruke = (id) => {
-        const url = `http://localhost:3001/poruke/${id}`
         const poruka = poruke.find(p => p.id === id)        
         const novaPoruka = {
             ...poruka,
             vazno: !poruka.vazno
         }
-        axios
-        .put(url, novaPoruka)
+        porukeServer
+        .osvjezi(id, novaPoruka)
         .then( (response) => {
             console.log(response);
             postaviPoruke(poruke.map(p => p.id !== id ? p : response.data ))
